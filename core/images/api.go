@@ -7,6 +7,9 @@ import (
 	"strconv"
 	"github.com/disintegration/imaging"
 	"log"
+	"net/http"
+	"image/color"
+	"image"
 )
 
 func ServeImage(c echo.Context) error {
@@ -19,6 +22,7 @@ func ServeImage(c echo.Context) error {
 	src, err := imaging.Open(files[idx])
 	if err != nil {
 		log.Fatalf("Open failed: %v", err)
+		return c.NoContent(http.StatusBadRequest)
 	}
 
 	var h = 0
@@ -30,13 +34,20 @@ func ServeImage(c echo.Context) error {
 	if c.Param("w") != "" {
 		w, _ = strconv.Atoi(c.Param("w"))
 	}
+	var dst *image.NRGBA
+
 	if w != 0 && h != 0 {
-		src = imaging.CropAnchor(src, w, h, imaging.Center)
+		src = imaging.Fill(src, w, h, imaging.Center, imaging.Lanczos)
+		dst = imaging.New(w, h, color.NRGBA{0, 0, 0, 0})
+		dst = imaging.Paste(dst, src, image.Pt(0, 0))
 	} else if w != h && (w == 0 || h == 0) {
-		src = imaging.Resize(src, w, h, imaging.Lanczos)
+		dst = imaging.Resize(src, w, h, imaging.Lanczos)
 	}
-	c.Response().Header().Set(echo.HeaderContentType, "Application/Jpeg")
-	imaging.Encode(c.Response().Writer, src, imaging.JPEG)
+	c.Response().Header().Set(echo.HeaderContentType, "image/jpeg")
+	c.Response().Header().Set("Cache-Control", "no-cache, no-store, must-revalidate") // HTTP 1.1.
+	c.Response().Header().Set("Pragma", "no-cache") // HTTP 1.0.
+	c.Response().Header().Set("Expires", "0") // Proxies.
+	imaging.Encode(c.Response().Writer, dst, imaging.JPEG)
 	c.Response().Flush()
 
 	return nil
