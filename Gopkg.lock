@@ -2,21 +2,6 @@
 
 
 [[projects]]
-  branch = "master"
-  name = "bitbucket.org/observador/barqueiro"
-  packages = [
-    "core/config",
-    "core/log"
-  ]
-  revision = "d109e1743351518ed2ceb064483f5d9472a21e04"
-
-[[projects]]
-  name = "github.com/Sirupsen/logrus"
-  packages = ["."]
-  revision = "d682213848ed68c0a260ca37d6dd5ace8423f5ba"
-  version = "v1.0.4"
-
-[[projects]]
   name = "github.com/dgrijalva/jwt-go"
   packages = ["."]
   revision = "dbeaa9332f19a944acb5736b4456cfcc02140e29"
@@ -150,10 +135,9 @@
   name = "golang.org/x/crypto"
   packages = [
     "acme",
-    "acme/autocert",
-    "ssh/terminal"
+    "acme/autocert"
   ]
-  revision = "91a49db82a88618983a78a06c1cbd4e00ab749ab"
+  revision = "85f98707c97e11569271e4d9b3d397e079c4f4d0"
 
 [[projects]]
   branch = "master"
@@ -168,10 +152,7 @@
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
-  packages = [
-    "unix",
-    "windows"
-  ]
+  packages = ["unix"]
   revision = "dd2ff4accc098aceecb86b36eaa7829b2a17b1c9"
 
 [[projects]]
@@ -196,6 +177,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "8197120a4091957dd77a34995a2f2c787bf5ae61fac1454ce61695212c2ee082"
+  inputs-digest = "1d1fa32d95effb69e9153091722b4ffa9eb05013b24bbb98216acda3f2c03adc"
   solver-name = "gps-cdcl"
   solver-version = 1

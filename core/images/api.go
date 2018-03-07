@@ -5,16 +5,16 @@ import (
 	"time"
 	"math/rand"
 	"strconv"
-	"bitbucket.org/observador/barqueiro/core/log"
 	"github.com/disintegration/imaging"
+	"log"
 )
 
 func ServeImage(c echo.Context) error {
 	s := rand.NewSource(time.Now().Unix())
 	r := rand.New(s)
 	idx := r.Intn(len(files) - 1)
-	log.Infoln(files[idx])
-	log.Infoln(idx)
+	log.Println(files[idx])
+	log.Println(idx)
 
 	src, err := imaging.Open(files[idx])
 	if err != nil {
