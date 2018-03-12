@@ -36,7 +36,7 @@ func Config() Provider {
 }
 
 func init() {
-	defaultConfig = readViperConfig("tio-patinhas")
+	defaultConfig = readViperConfig("go-lorem-image")
 }
 
 func readViperConfig(appName string) *viper.Viper {
