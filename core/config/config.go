@@ -46,7 +46,7 @@ func readViperConfig(appName string) *viper.Viper {
 	v.AutomaticEnv()
 
 	// app
-	v.SetDefault("app.name", "go-lorem-image")
+	v.SetDefault("app.name", "goloremimage")
 	// log
 	v.SetDefault("log.json", false)
 	v.SetDefault("log.level", "info")
