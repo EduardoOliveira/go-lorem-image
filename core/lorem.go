@@ -6,6 +6,6 @@ import (
 )
 
 func Start() {
-	images.Register(server.GetGroup("lorem"))
+	images.Register(server.GetGroup(""))
 	server.Start()
 }

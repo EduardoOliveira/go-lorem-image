@@ -13,13 +13,22 @@ import (
 )
 
 func ServeImage(c echo.Context) error {
+	dir := c.Param("dir")
+	if dir == "" {
+		return c.NoContent(http.StatusNotFound)
+	}
+
+	if files[dir] == nil || len(files[dir]) == 0 {
+		return c.NoContent(http.StatusNotFound)
+	}
+
 	s := rand.NewSource(time.Now().Unix())
 	r := rand.New(s)
-	idx := r.Intn(len(files) - 1)
-	log.Println(files[idx])
+	idx := r.Intn(len(files[dir]) - 1)
+	log.Println(files[dir][idx])
 	log.Println(idx)
 
-	src, err := imaging.Open(files[idx])
+	src, err := imaging.Open(files[dir][idx])
 	if err != nil {
 		log.Fatalf("Open failed: %v", err)
 		return c.NoContent(http.StatusBadRequest)
@@ -34,7 +43,7 @@ func ServeImage(c echo.Context) error {
 	if c.Param("w") != "" {
 		w, _ = strconv.Atoi(c.Param("w"))
 	}
-	var dst *image.NRGBA
+	dst := src
 
 	if w != 0 && h != 0 {
 		src = imaging.Fill(src, w, h, imaging.Center, imaging.Lanczos)
@@ -45,8 +54,8 @@ func ServeImage(c echo.Context) error {
 	}
 	c.Response().Header().Set(echo.HeaderContentType, "image/jpeg")
 	c.Response().Header().Set("Cache-Control", "no-cache, no-store, must-revalidate") // HTTP 1.1.
-	c.Response().Header().Set("Pragma", "no-cache") // HTTP 1.0.
-	c.Response().Header().Set("Expires", "0") // Proxies.
+	c.Response().Header().Set("Pragma", "no-cache")                                   // HTTP 1.0.
+	c.Response().Header().Set("Expires", "0")                                         // Proxies.
 	imaging.Encode(c.Response().Writer, dst, imaging.JPEG)
 	c.Response().Flush()
 

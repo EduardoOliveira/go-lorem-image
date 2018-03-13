@@ -16,6 +16,7 @@ func init() {
 	}))
 
 	e.Use(middleware.Gzip())
+	e.Use(middleware.RemoveTrailingSlash())
 	e.Use(middleware.Recover())
 
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{

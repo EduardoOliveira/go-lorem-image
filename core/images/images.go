@@ -9,28 +9,39 @@ import (
 )
 
 var (
-	files   []string
+	files   map[string][]string
 	imgRoot string
 )
 
 func init() {
 	imgRoot = config.Config().GetString("images.root")
-	dFiles, err := ioutil.ReadDir(imgRoot)
+	root, err := ioutil.ReadDir(imgRoot)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	files = make([]string, 1)
+	files = make(map[string][]string, 1)
 
-	for _, file := range dFiles {
-		files = append(files, fmt.Sprintf("%s/%s", imgRoot, file.Name()))
+	for _, dir := range root {
+		if dir.IsDir() {
+			d, err := ioutil.ReadDir(fmt.Sprintf("%s/%s", imgRoot, dir.Name()))
+			if err != nil {
+				break
+			}
+			for _, f := range d {
+				if files[dir.Name()] == nil {
+					files[dir.Name()] = make([]string, 1)
+				}
+				files[dir.Name()] = append(files[dir.Name()], fmt.Sprintf("%s/%s/%s", imgRoot, dir.Name(), f.Name()))
+			}
+		}
 	}
 
 	log.Println(files)
 }
 func Register(group *echo.Group) {
-	group.GET("/img", ServeImage)
-	group.GET("/img/h/:h", ServeImage)
-	group.GET("/img/w/:w", ServeImage)
-	group.GET("/img/:h/:w", ServeImage)
+	group.GET("/:dir", ServeImage)
+	group.GET("/:dir/h/:h", ServeImage)
+	group.GET("/:dir/w/:w", ServeImage)
+	group.GET("/:dir/:h/:w", ServeImage)
 }
