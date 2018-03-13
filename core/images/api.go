@@ -61,3 +61,13 @@ func ServeImage(c echo.Context) error {
 
 	return nil
 }
+
+func Reload(c echo.Context) (err error) {
+	files, err = load()
+	if err != nil {
+		log.Fatal(err)
+		return c.NoContent(http.StatusInternalServerError)
+	}
+
+	return c.JSON(http.StatusOK, files)
+}
