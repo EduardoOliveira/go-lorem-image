@@ -41,12 +41,11 @@ func init() {
 
 func readViperConfig(appName string) *viper.Viper {
 	v := viper.New()
-	v.SetEnvPrefix(appName)
 	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	v.AutomaticEnv()
 
 	// app
-	v.SetDefault("app.name", "goloremimage")
+	v.SetDefault("app.name", "go-lorem-image")
 	// log
 	v.SetDefault("log.json", false)
 	v.SetDefault("log.level", "info")
